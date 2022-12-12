@@ -1,0 +1,19 @@
+{
+    "proposal_id": 16949,
+    "begin_at": "2022-12-11T13:45:12.000Z",
+    "category": "",
+    "dec": null,
+    "end_at": "2022-12-11T13:45:56.000Z",
+    "ra": null,
+    "reference_image_url": null,
+    "principal_investigator_full_name": "Doug Branton",
+    "proposal_category": "",
+    "proposal_title": "STIS CCD Bias and Read Noise Monitor Part 1",
+    "reference_caption": "View the research proposal",
+    "reference_href": "https://archive.stsci.edu/proposal_search.php?id=16949\u0026mission=hst",
+    "target_name": "BIAS",
+    "science_instrument_acronym": "STIS/CCD",
+    "science_instrument": "Space Telescope Imaging Spectrograph",
+    "state": "Calibrating",
+    "what_am_i_looking_at": "Between 13:45 and 13:45 UTC on 2022-12-11, Hubble is looking at BIAS with Space Telescope Imaging Spectrograph (STIS/CCD) for Doug Branton"
+}

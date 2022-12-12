@@ -1,0 +1,19 @@
+{
+    "proposal_id": 16930,
+    "begin_at": "2022-12-10T17:06:10.000Z",
+    "category": "Ext Star",
+    "dec": "-3.275",
+    "end_at": "2022-12-10T17:45:28.000Z",
+    "ra": "152.744",
+    "reference_image_url": "https://skyserver.sdss.org/dr15/SkyServerWS/ImgCutout/getjpeg?TaskName=Skyserver.Chart.List\u0026ra=152.744\u0026dec=-3.275\u0026scale=0.79224\u0026width=600\u0026height=600\u0026opt=LG",
+    "principal_investigator_full_name": "Dr. Julia Roman-Duval",
+    "proposal_category": "EXT-STAR",
+    "proposal_title": "ULLYSES Sextans A COS Spectroscopy",
+    "reference_caption": "View the research proposal",
+    "reference_href": "https://archive.stsci.edu/proposal_search.php?id=16930\u0026mission=hst",
+    "target_name": "SEXTANS-A-GHN-S2",
+    "science_instrument_acronym": "COS/FUV",
+    "science_instrument": "Cosmic Origins Spectrograph",
+    "state": "Observing",
+    "what_am_i_looking_at": "Between 17:06 and 17:45 UTC on 2022-12-10, Hubble is looking at SEXTANS-A-GHN-S2, a Ext Star, with Cosmic Origins Spectrograph (COS/FUV) for Dr. Julia Roman-Duval"
+}
