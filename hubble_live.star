@@ -23,6 +23,21 @@ HTTP_STATUS_OK = 200
 DEFAULT_CACHE_TIMEOUT = 60
 SPACE_TELESCOPE_LIVE_API = "https://api.spacetelescopelive.org/observation_timelines/latest"
 
+# Color Constants
+RED = "#ff0000"
+GREEN = "#00ff00"
+DARK_GREEN = "#00ff0030"
+BLUE = "#0000ff"
+ORANGE = "#ffa500"
+YELLOW = "#ffff00"
+CYAN =  "#00ffff"
+WHITE = "#ffffff"
+OBS_STATE_COLORS = {
+    "Acquiring New Target": ORANGE,
+    "Observing": GREEN,
+    "Calibrating": YELLOW,
+}
+
 # Screen Constants and Font Specifics
 SCREEN_HEIGHT = 32
 SCREEN_WIDTH = 64
@@ -62,7 +77,6 @@ def get_hst_live():
             obsjson_raw = "{}"
 
         obs = json.decode(obsjson_raw)
-        # obs = json.decode(TEST_TARGET)
 
         if obs.get("what_am_i_looking_at", None) == "Hubble is acquiring a new target":
             obs["state"] = "Acquiring New Target"
@@ -73,15 +87,14 @@ def get_hst_live():
             obs["reference_image_url"] = ""
             obs["reference_image_base64"] = ""
             obs["proposal_id"] = ""
+            obs["category"] = ""
 
         if obs.get("reference_image_url", None):
             obs["reference_image_base64"] = get_ref_image(obs["reference_image_url"])
         else:
             obs["reference_image_url"] = ""
-        if obs.get("ra", None):
-            obs["ra"] = ""
-        if obs.get("dec", None):
-            obs["dec"] = ""
+        if obs.get("ra", None) == None: obs["ra"] = ""
+        if obs.get("dec", None) == None: obs["dec"] = ""
 
         if obs.get("end_at", None) != None:
             cache_timeout = time.parse_time(obs["end_at"]) - time.now().in_location("UTC")
@@ -104,7 +117,6 @@ def get_ref_image(image_url):
     image_url = re.sub(r"&opt=LG", "", image_url, count = 1)
     image_src = ""
 
-    # print(image_url)
     api_reply = http.get(image_url)
     if api_reply.status_code == HTTP_STATUS_OK:
         image_src = base64.encode(api_reply.body())
@@ -132,7 +144,7 @@ def render_image(obs, size):
         return render.Box(
             width = size,
             height = size,
-            color = "#0f03",
+            color = DARK_GREEN,
             padding = 1,
             child = render.Image(
                 src = base64.decode(obs["reference_image_base64"]),
@@ -144,7 +156,7 @@ def render_image(obs, size):
         return render.Box(
             width = size,
             height = size,
-            color = "#0f03",
+            color = DARK_GREEN,
             padding = 1,
             child = render.WrappedText(
                 "No Img",
@@ -154,7 +166,7 @@ def render_image(obs, size):
             ),
         )
 
-def marquee_text(text, width = SCREEN_WIDTH, font = SMALL_FONT, color = "#ffffff"):
+def marquee_text(text, width = SCREEN_WIDTH, font = SMALL_FONT, color = WHITE):
     """Marquee object with an embedded text object.
 
     Args:
@@ -188,13 +200,11 @@ def main(config):
     Returns:
         A `render.Root` object.
     """
-    state_colors = {
-        "Acquiring New Target": "#FFA500",
-        "Observing": "#00FF00",
-        "Calibrating": "#FFFF00",
-    }
     obs = get_hst_live()
     img_size = 20
+    target_text = obs["target_name"]
+    if len(obs["category"]) > 0:
+        target_text = "{} - {}".format(obs["category"], obs["target_name"])
     render_obj = render.Root(
         child = render.Column(
             children = [
@@ -206,13 +216,10 @@ def main(config):
                                 marquee_text(
                                     obs["state"],
                                     width = SCREEN_WIDTH,
-                                    color = state_colors.get(obs["state"], "#ffffff"),
+                                    color = OBS_STATE_COLORS.get(obs["state"], WHITE),
                                 ),
                                 marquee_text(
-                                    "{} ({})".format(
-                                        obs["target_name"],
-                                        obs["proposal_id"],
-                                    ) if obs.get("target_name", None) else "",
+                                    target_text,
                                     width = SCREEN_WIDTH,
                                 ),
                             ],
@@ -227,14 +234,14 @@ def main(config):
                                 marquee_text(obs["science_instrument_acronym"], width = SCREEN_WIDTH - img_size),
                                 render.Row(
                                     children = [
-                                        render.Text("RA=", color = "#00FFFF", font = SMALL_FONT),
-                                        render.Text(obs["ra"] if obs["ra"] else "", color = "#ffffff", font = SMALL_FONT),
+                                        render.Text("RA=", color = CYAN, font = SMALL_FONT),
+                                        render.Text(obs["ra"], color = WHITE, font = SMALL_FONT),
                                     ],
                                 ),
                                 render.Row(
                                     children = [
-                                        render.Text("Dec=", color = "#00FFFF", font = SMALL_FONT),
-                                        render.Text(obs["dec"] if obs["dec"] else "", color = "#ffffff", font = SMALL_FONT),
+                                        render.Text("Dec=", color = CYAN, font = SMALL_FONT),
+                                        render.Text(obs["dec"], color = WHITE, font = SMALL_FONT),
                                     ],
                                 ),
                             ],
