@@ -18,6 +18,10 @@ load("time.star", "time")
 # Constants
 #-------------------------------------------------------------------------------
 
+# Configuration Constants
+DEFAULT_DISPLAY_ON_SLEW = True
+DEFAULT_DISPLAY_ON_CAL = True
+
 # Cache, HTTP, and URL constants
 HTTP_STATUS_OK = 200
 DEFAULT_CACHE_TIMEOUT = 60
@@ -30,7 +34,7 @@ DARK_GREEN = "#00ff0030"
 BLUE = "#0000ff"
 ORANGE = "#ffa500"
 YELLOW = "#ffff00"
-CYAN =  "#00ffff"
+CYAN = "#00ffff"
 WHITE = "#ffffff"
 OBS_STATE_COLORS = {
     "Acquiring New Target": ORANGE,
@@ -93,8 +97,10 @@ def get_hst_live():
             obs["reference_image_base64"] = get_ref_image(obs["reference_image_url"])
         else:
             obs["reference_image_url"] = ""
-        if obs.get("ra", None) == None: obs["ra"] = ""
-        if obs.get("dec", None) == None: obs["dec"] = ""
+        if obs.get("ra", None) == None:
+            obs["ra"] = ""
+        if obs.get("dec", None) == None:
+            obs["dec"] = ""
 
         if obs.get("end_at", None) != None:
             cache_timeout = time.parse_time(obs["end_at"]) - time.now().in_location("UTC")
@@ -135,7 +141,7 @@ def render_image(obs, size):
     Args:
         obs: The observation data dictionary that contains the image info
         size: Size in pixels of one side of the square image to be displayed
-    
+
     Returns:
         A `render.Box` object frame with a `render.Image` child or a
         `render.Text` object.
@@ -174,7 +180,7 @@ def marquee_text(text, width = SCREEN_WIDTH, font = SMALL_FONT, color = WHITE):
         width: Integer width in pixels of the `render.Marquee` object
         font: String name of the font to use
         color: String hex color for the text
-    
+
     Returns:
         A `render.Marquee` object with an embedded `render.Text` child object.
     """
@@ -188,21 +194,23 @@ def marquee_text(text, width = SCREEN_WIDTH, font = SMALL_FONT, color = WHITE):
     )
 
 #-------------------------------------------------------------------------------
-# Main
+# Render Display
 #-------------------------------------------------------------------------------
 
-def main():
-    """Main function body.
+def render_display(obs, img_size = 20):
+    """Function that renders the display.
+
+    Args:
+       obs: Hubble observation data
+       img_size: Size of side of square for display of starfield
 
     Returns:
         A `render.Root` object.
     """
-    obs = get_hst_live()
-    img_size = 20
     target_text = obs["target_name"]
-    if len(obs["category"]) > 0:
+    if obs["category"] and len(obs["category"]) > 0:
         target_text = "{} - {}".format(obs["category"], obs["target_name"])
-    render_obj = render.Root(
+    return render.Root(
         child = render.Column(
             children = [
                 render.Row(
@@ -250,6 +258,29 @@ def main():
         ),
     )
 
+#-------------------------------------------------------------------------------
+# Main
+#-------------------------------------------------------------------------------
+
+def main(config):
+    """Main function body.
+
+    Args:
+       config: A Tidbyt configuration object
+
+    Returns:
+        A `render.Root` object or empty list `[]` if nothing to display.
+    """
+    display_on_slew = config.bool("display_on_slew", DEFAULT_DISPLAY_ON_SLEW)
+    display_on_cal = config.bool("display_on_cal", DEFAULT_DISPLAY_ON_CAL)
+    obs = get_hst_live()
+
+    render_obj = []
+    if (obs["state"] == "Acquiring New Target" and display_on_slew) or \
+       (obs["state"] == "Calibrating" and display_on_cal) or \
+       (obs["state"] != "Calibrating" and obs["state"] != "Acquiring New Target"):
+        render_obj = render_display(obs)
+
     return render_obj
 
 def get_schema():
@@ -260,5 +291,20 @@ def get_schema():
     """
     return schema.Schema(
         version = "1",
-        fields = [],
+        fields = [
+            schema.Toggle(
+                id = "display_on_slew",
+                name = "Display When Acquiring",
+                desc = "Toggle to display while acuiring or hide.",
+                icon = "crosshairs",
+                default = DEFAULT_DISPLAY_ON_SLEW,
+            ),
+            schema.Toggle(
+                id = "display_on_cal",
+                name = "Display When Calibrating",
+                desc = "Toggle to display while calibrating or hide.",
+                icon = "ruler",
+                default = DEFAULT_DISPLAY_ON_CAL,
+            ),
+        ],
     )
