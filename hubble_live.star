@@ -34,7 +34,7 @@ DARK_GREEN = "#00ff0030"
 BLUE = "#0000ff"
 ORANGE = "#ffa500"
 YELLOW = "#ffff00"
-CYAN =  "#00ffff"
+CYAN = "#00ffff"
 WHITE = "#ffffff"
 OBS_STATE_COLORS = {
     "Acquiring New Target": ORANGE,
@@ -97,8 +97,10 @@ def get_hst_live():
             obs["reference_image_base64"] = get_ref_image(obs["reference_image_url"])
         else:
             obs["reference_image_url"] = ""
-        if obs.get("ra", None) == None: obs["ra"] = ""
-        if obs.get("dec", None) == None: obs["dec"] = ""
+        if obs.get("ra", None) == None:
+            obs["ra"] = ""
+        if obs.get("dec", None) == None:
+            obs["dec"] = ""
 
         if obs.get("end_at", None) != None:
             cache_timeout = time.parse_time(obs["end_at"]) - time.now().in_location("UTC")
@@ -139,7 +141,7 @@ def render_image(obs, size):
     Args:
         obs: The observation data dictionary that contains the image info
         size: Size in pixels of one side of the square image to be displayed
-    
+
     Returns:
         A `render.Box` object frame with a `render.Image` child or a
         `render.Text` object.
@@ -178,7 +180,7 @@ def marquee_text(text, width = SCREEN_WIDTH, font = SMALL_FONT, color = WHITE):
         width: Integer width in pixels of the `render.Marquee` object
         font: String name of the font to use
         color: String hex color for the text
-    
+
     Returns:
         A `render.Marquee` object with an embedded `render.Text` child object.
     """
@@ -195,7 +197,7 @@ def marquee_text(text, width = SCREEN_WIDTH, font = SMALL_FONT, color = WHITE):
 # Render Display
 #-------------------------------------------------------------------------------
 
-def render_display(obs, img_size=20):
+def render_display(obs, img_size = 20):
     """Function that renders the display.
 
     Args:
@@ -280,7 +282,6 @@ def main(config):
         render_obj = render_display(obs)
 
     return render_obj
-
 
 def get_schema():
     """Provide the schema for the Tidbyt app configuration.
