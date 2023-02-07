@@ -6,7 +6,7 @@
 ## Description
 Presents the current observation status of the Hubble Space Telescope as provided by the [Space Telescope Science Institute][stsci] website, [Space Telescope Live][space-telescope-live].
 
-![Hubble Live for Tidbyt](hubble_live.gif)
+![Hubble Live for Tidbyt][app-gif]
 
 Check out the [Tidybt][tidbyt-url] for an awesome information display for your home. If you are intereasted in developing for the Tidbyt, check out the [Tidbyt Developers Page][tidbyt-dev-url].
 
@@ -63,3 +63,4 @@ Project Link: [https://github.com/SpinStabilized/tidbyt-hubblelive][repository-u
 [tidbyt-community-repo]:[https://github.com/tidbyt/community]
 [stsci]: https://www.stsci.edu/
 [space-telescope-live]: https://spacetelescopelive.org/
+[app-gif]: https://github.com/SpinStabilized/tidbyt-hubblelive/raw/main/hubble_live.gif
