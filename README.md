@@ -3,6 +3,10 @@
 
 # Hubble Live Applet for Tidbyt
 
+# IMPORTANT
+
+This app has been retired and will soon no longer be available on the Tidbyt. The API is no longer available so the app can't display information. Leaving this repo here for archival purposes.
+
 ## Description
 Presents the current observation status of the Hubble Space Telescope as provided by the [Space Telescope Science Institute][stsci] website, [Space Telescope Live][space-telescope-live].
 
